@@ -9,29 +9,44 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/applications", async (req, res) => {
-  try {
-    const { rows } = await db.query("SELECT * FROM applications ORDER BY id ASC");
-    res.json(rows);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "Server error" });
-  }
+    try {
+        const { rows } = await db.query("SELECT * FROM applications ORDER BY id ASC");
+        res.json(rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: "Server error" });
+    }
 });
 
 app.post("/api/applications", async (req, res) => {
-  const { company_name, position, status } = req.body;
-  try {
-    const result = await db.query(
-      "INSERT INTO applications (company_name, position, status) VALUES ($1, $2, $3) RETURNING *",
-      [company_name, position, status]
-    );
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "Failed to add application" });
-  }
+    const { company_name, position, status } = req.body;
+    try {
+        const result = await db.query(
+            "INSERT INTO applications (company_name, position, status) VALUES ($1, $2, $3) RETURNING *",
+            [company_name, position, status]
+        );
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: "Failed to add application" });
+    }
+});
+
+// Remove job 
+app.delete("/api/applications/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        await db.query(
+            "DELETE FROM applications WHERE id = $1",
+            [id]
+        );
+        res.send(`ID number ${id} has been removed succssesfully`);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: "Failed to remove item" });
+    }
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });

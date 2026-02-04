@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Input from "./Input";
-import JobCard from "./JobCard"
+import JobCard from "./JobCard";
 
 function App() {
   // Set hooks for the db parameters
@@ -34,6 +34,16 @@ function App() {
       fetchApps();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  // Delete the data from the server db
+  const deleteJob = async (id) => {
+    let answer = confirm("Are you sure you want to delete this job application?");
+    if (answer) {
+      const result = await axios.delete(`http://localhost:5000/api/applications/${id}`);
+      fetchApps();
+      console.log(result.data);
     }
   };
 
@@ -77,7 +87,7 @@ function App() {
         </div>
       </form>
 
-      <JobCard info={applications}/>
+      <JobCard info={applications} onClick={(e) => deleteJob(e.target.id)} />
     </div>
   );
 }

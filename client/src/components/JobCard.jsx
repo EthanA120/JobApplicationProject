@@ -2,7 +2,6 @@ import { useState } from "react";
 
 function JobCard(props) {
   return (
-
     <div className="bg-white shadow-md rounded p-3">
         {(props.info).map((data) => (
           <div
@@ -17,7 +16,7 @@ function JobCard(props) {
             <div className="mx-2 text-center px-3 py-0.5 text-blue-500 font-semibold bg-blue-100 rounded-md">
               {data.status}
             </div>
-            <div className="mx-2 text-center">❌</div>
+            <button id={data.id} onClick={props.onClick} className="mx-2 text-center rounded-sm hover:shadow-[0_0_2px_0.5px_rgba(230,0,15,0.5)]">❌</button>
           </div>
         ))}
       </div>
